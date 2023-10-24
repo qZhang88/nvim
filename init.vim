@@ -4,6 +4,12 @@ au FocusGained,BufEnter * :checktime
 set autowrite
 autocmd FocusLost,BufLeave * silent! update
 
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
 " 在 terminal 中也是使用 esc 来进入 normal 模式
 tnoremap  <Esc>  <C-\><C-n>
 " 映射 leader 键为 ,
@@ -27,10 +33,13 @@ autocmd TextYankPost *
     \ execute 'OSCYankRegister +' |
     \ endif
 
+" set tab to space
+set expandtab
+
 " 使用 z a 打开和关闭 fold，打开大文件（超过 10万行)的时候可能造成性能问题
 set foldlevelstart=99
 set shiftwidth=2
-set foldmethod=syntax
+set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
 
 " floaterm 永远的神
