@@ -2,7 +2,7 @@ require("nvim-treesitter.configs").setup({
   -- If TS highlights are not enabled at all, or disabled via `disable` prop, highlighting will fallback to default Vim syntax highlighting
   highlight = {
     enable = true,
-    disable = { "org", "c", "cpp" },
+    disable = { "org", "c", "cpp", "yaml" },
     additional_vim_regex_highlighting = { "org" },
   },
   -- ensure_installed = "maintained", 安装目前维护的所有语言 treesitter 插件。
@@ -23,6 +23,7 @@ require("nvim-treesitter.configs").setup({
     "markdown_inline", -- 让 markdown 里面的代码段可以高亮
     -- 'comment' -- 更好的高亮 TODO XXX NOTE FIXME ，但是其让 url 的高亮过于明显
     "rst",
+    "yaml",
   },
 })
 

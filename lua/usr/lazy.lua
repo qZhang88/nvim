@@ -124,9 +124,16 @@ require("lazy").setup({
   -- 时间管理
   -- "nvim-orgmode/orgmode", -- orgmode 日程管理
   {
-    "nvim-neorg/neorg",
-    build = ":Neorg sync-parsers",
-    dependencies = { "nvim-lua/plenary.nvim" },
+      "vhyrro/luarocks.nvim",
+      priority = 1000, -- We'd like this plugin to load first out of the rest
+      config = true, -- This automatically runs `require("luarocks-nvim").setup()`
+  },
+  {
+      "nvim-neorg/neorg",
+      dependencies = { "luarocks.nvim" },
+      lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
+      version = "*", -- Pin Neorg to the latest stable release
+      config = true,
   },
   -- use 'wakatime/vim-wakatime' -- 代码时间统计
   --
