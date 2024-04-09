@@ -8,6 +8,7 @@ require("neorg").setup {
 	  work = "~/ws/code/neovim/notes/work",
 	  home = "~/ws/code/neovim/notes/home",
 	},
+        index = "index.norg",
       },
     },
     ["core.ui.calendar"] = {},

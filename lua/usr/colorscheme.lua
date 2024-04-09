@@ -9,3 +9,4 @@ require("catppuccin").setup({
 vim.api.nvim_set_hl(0, "LeapBackdrop", { fg = "grey" }) -- leap.nvim
 -- vim.cmd.colorscheme("catppuccin")
 vim.cmd.colorscheme "tokyonight"
+vim.api.nvim_set_hl(0, "@markup.italic", { italic = true })
