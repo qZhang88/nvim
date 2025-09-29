@@ -32,8 +32,10 @@ require("luasnip.loaders.from_snipmate").lazy_load({ paths = "~/.config/nvim/sni
 
 vim.g.maplocalleader = ";"
 
+-- 使用 z a 打开和关闭 fold，打开大文件（超过 10万行)的时候可能造成性能问题
 vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.opt.foldlevel = 99
 
 -- workaround for https://github.com/neovim/neovim/issues/21856

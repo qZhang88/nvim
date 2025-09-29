@@ -35,19 +35,7 @@ autocmd TextYankPost *
 
 " set tab to space
 set expandtab
-
-" 使用 z a 打开和关闭 fold，打开大文件（超过 10万行)的时候可能造成性能问题
 set shiftwidth=2
-" set foldmethod=expr
-" set foldlevelstart=99
-" set foldexpr="nvim_treesitter#foldexpr()"
-
-" floaterm 永远的神
-let g:floaterm_width = 0.7
-let g:floaterm_height = 0.7
-let g:floaterm_keymap_prev   = '<C-p>'
-let g:floaterm_keymap_new    = '<C-n>'
-let g:floaterm_keymap_toggle = '<C-t>'
 
 " 加载 lua 配置
 lua require 'usr'
