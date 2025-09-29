@@ -12,8 +12,9 @@ require("usr.version")
 require("usr.which-key")
 require("usr.colorscheme")
 require("usr.alpha")
-require("usr.neorg")
-require("colorizer").setup({ "css", "javascript", "vim", html = { mode = "foreground" } })
+require("usr.toggleterm")
+-- require("usr.neorg")
+-- require("colorizer").setup({ "css", "javascript", "vim", html = { mode = "foreground" } })
 require("nvim-surround").setup()
 require("persisted").setup({ autoload = true })
 require("gitsigns").setup({ signcolumn = false, numhl = true })
@@ -23,15 +24,17 @@ require("fidget").setup()
 require("nvim-navic").setup()
 require("barbecue").setup()
 require("nvim-lightbulb").update_lightbulb()
-require("im_select").setup()
+-- require("im_select").setup()
 require("lualine").setup()
 -- require("rsync").setup()
 
--- require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/LuaSnip/" })
 require("luasnip.loaders.from_snipmate").lazy_load({ paths = "~/.config/nvim/snippets/" })
--- require("luasnip.loaders.from_vscode").load({paths = "~/.config/nvim/snippets"})
 
 vim.g.maplocalleader = ";"
+
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldlevel = 99
 
 -- workaround for https://github.com/neovim/neovim/issues/21856
 vim.api.nvim_create_autocmd({ "VimLeave" }, {

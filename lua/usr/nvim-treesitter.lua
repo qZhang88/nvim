@@ -7,7 +7,7 @@ require("nvim-treesitter.configs").setup({
   },
   -- ensure_installed = "maintained", 安装目前维护的所有语言 treesitter 插件。
   ensure_installed = {
-    "org",
+    -- "org",
     "lua",
     "java",
     "rust",

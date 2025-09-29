@@ -1,8 +1,18 @@
-local status_ok, _ = pcall(require, "lspconfig")
-if not status_ok then
-  return
-end
-
 require("usr.lsp.mason")
 require("usr.lsp.handlers").setup()
-require("usr.lsp.null-ls")
+
+vim.lsp.config("ccls", {
+  init_options = {
+    -- compilationDatabaseDirectory = "build";
+    index = {
+      threads = 0;
+    };
+    clang = {
+      excludeArgs = { "-frounding-math"} ;
+    };
+    highlight = {
+      lsRanges = true;
+    };
+  }
+})
+vim.lsp.enable('ccls')

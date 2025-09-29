@@ -87,7 +87,6 @@ require("lazy").setup({
   "nvim-telescope/telescope-frecency.nvim", -- 查找最近打开的文件
 
   -- 命令执行
-  "voldikss/vim-floaterm",        -- 终端
   "akinsho/toggleterm.nvim",      -- 性能好点，但是易用性和稳定性都比较差
   "CRAG666/code_runner.nvim",     -- 一键运行代码
   "samjwill/nvim-unception",      -- 嵌套 nvim 自动 offload 到 host 中
@@ -115,7 +114,7 @@ require("lazy").setup({
   "mg979/vim-visual-multi",       -- 同时编辑多个位置
   "AckslD/nvim-neoclip.lua",      -- 保存 macro
   "windwp/nvim-spectre",          -- 媲美 vscode 的多文件替换
-  'filipdutescu/renamer.nvim',    -- vscode renaming UI for Neovim
+  -- 'filipdutescu/renamer.nvim',    -- vscode renaming UI for Neovim
 
   -- 高亮
   "norcalli/nvim-colorizer.lua", -- 显示 #FFFFFF
@@ -123,18 +122,18 @@ require("lazy").setup({
 
   -- 时间管理
   -- "nvim-orgmode/orgmode", -- orgmode 日程管理
-  {
-      "vhyrro/luarocks.nvim",
-      priority = 1000, -- We'd like this plugin to load first out of the rest
-      config = true, -- This automatically runs `require("luarocks-nvim").setup()`
-  },
-  {
-      "nvim-neorg/neorg",
-      dependencies = { "luarocks.nvim" },
-      lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-      -- version = "*", -- Pin Neorg to the latest stable release
-      -- config = true,
-  },
+  -- {
+  --     "vhyrro/luarocks.nvim",
+  --     priority = 1000, -- We'd like this plugin to load first out of the rest
+  --     config = true, -- This automatically runs `require("luarocks-nvim").setup()`
+  -- },
+  -- {
+  --     "nvim-neorg/neorg",
+  --     dependencies = { "luarocks.nvim" },
+  --     lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
+  --     -- version = "*", -- Pin Neorg to the latest stable release
+  --     -- config = true,
+  -- },
   -- use 'wakatime/vim-wakatime' -- 代码时间统计
   --
   -- lsp 增强
@@ -146,15 +145,17 @@ require("lazy").setup({
   "ggandor/leap.nvim",            -- 快速移动
   { "crusj/bookmarks.nvim", branch = "main" }, -- 书签
   "tyru/open-browser.vim",        -- 使用 gx 打开链接
-  "keaising/im-select.nvim",      -- 自动切换输入法
+  -- "keaising/im-select.nvim",      -- 自动切换输入法
   "olimorris/persisted.nvim",     -- 打开 vim 的时候，自动回复上一次打开的样子
-  "anuvyklack/hydra.nvim",        -- 消除重复快捷键，可以用于调整 window 大小等
+  "nvimtools/hydra.nvim",         -- 消除重复快捷键，可以用于调整 window 大小等
   "ojroques/vim-oscyank",         -- 让 nvim 在远程 server 上拷贝到本地剪切板上
   "azabiong/vim-highlighter",     -- 高亮多个搜索内容
   "dstein64/vim-startuptime",     -- 分析 nvim 启动时间
   "voldikss/vim-translator",      -- 翻译
   {
-    "OscarCreator/rsync.nvim",    -- 自动同步代码远程
-    build = "make",               -- 实在不行，进入到 ~/.local/share/nvim/lazy/rsync.nvim 中执行下 make
+    "Martins3/rsync.nvim",
+    lazy = true,
+    cmd = { "TransferInit", "TransferToggle" },
+    opts = {},
   },
 }, {})
