@@ -7,15 +7,8 @@ This is my personalized config and plugins for [Neovim](https://neovim.io).
 Install Neovim from a package manager of your choice e.g. brew, apt, pacman
 etc.. For this config we need to have Neovim version 0.8 or higher.
 
-On a Mac:
+On Linux:
 
-```sh
-brew install neovim # For latest stable Neovim
-brew install --HEAD neovim # For Neovim nightly version
-```
-
-If you would like to make sure Neovim only updates when you want it to
-than I recommend installing from source:
 
 ```sh
 git clone https://github.com/neovim/neovim.git
@@ -29,7 +22,8 @@ sudo make install
 Make sure to remove or move your current `nvim` directory
 
 ```sh
-git clone https://github.com/rgruyters/nvim.git ~/.config/nvim
+git clone --branch linux --depth 1 https://github.com/qZhang88/nvim.git
+ln -s path/to/nvim ~/.config/nvim
 ```
 
 Run `nvim` and wait for the plugins to be installed
