@@ -47,7 +47,7 @@ wk.add({
   { "<space>8",  "<cmd>8wincmd w <cr>",                               desc = "jump to window 8" },
   { "<space>9",  "<cmd>9wincmd w <cr>",                               desc = "jump to window 9" },
   { "<space>a",  group = "misc" },
-  { "<space>aa", "<cmd>InsertUUID<cr>",                    desc = "remove trailing space" },
+  { "<space>aa", "<cmd>InsertUUID<cr>",                               desc = "remove trailing space" },
   { "<space>ad", "<cmd>call TrimWhitespace()<cr>",                    desc = "remove trailing space" },
   { "<space>at", "<Plug>Translate",                                   desc = "translate current word" },
   { "<space>b",  group = "buffer" },
@@ -73,7 +73,7 @@ wk.add({
   { "<space>l",  group = "language" },
   { "<space>la", "<cmd>lua vim.lsp.buf.code_action()<cr>",            desc = "code action" },
   { "<space>lc", "<cmd>Commentary<cr>",                               desc = "comment code" },
-  { "<space>lf", "<cmd> lua vim.lsp.buf.format{ async = true }<cr>",  desc = "format current buffer" },
+  { "<space>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>",   desc = "format current buffer" },
   { "<space>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", desc = "lsp goto next" },
   { "<space>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", desc = "lsp goto prev" },
   { "<space>ln", "<cmd>lua vim.lsp.buf.rename()<cr>",                 desc = "rename" },
@@ -136,28 +136,30 @@ wk.add({
 wk.add({
   {
     mode = { "v" },
-    { "<space>lc", ":Commentary<cr>",                               desc = "comment code" },
+    { "<space>l",  group = "language" },
+    { "<space>lc", ":Commentary<cr>",                                     desc = "comment code" },
+    { "<space>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>",     desc = "format current buffer" },
     { "<space>s",  group = "search" },
-    { "<space>sp", "<cmd>lua require('spectre').open_visual()<cr>", desc = "search" },
-    { "q",         "<cmd>q<cr>",                                    desc = "close window" },
+    { "<space>sp", "<cmd>lua require('spectre').open_visual()<cr>",       desc = "search" },
+    { "q",         "<cmd>q<cr>",                                          desc = "close window" },
   },
 })
 
 vim.api.nvim_set_keymap("i", "<c-g>", "<cmd>!ibus engine rime<cr>", { noremap = true })
 
--- 部分格式化，which-key 的设置方法有问题，似乎只是语法没有理解到位
--- https://vi.stackexchange.com/questions/36946/how-to-add-keymapping-for-lsp-code-formatting-in-visual-mode
-function FormatFunction()
-  vim.lsp.buf.format({
-    async = true,
-    range = {
-      ["start"] = vim.api.nvim_buf_get_mark(0, "<"),
-      ["end"] = vim.api.nvim_buf_get_mark(0, ">"),
-    },
-  })
-end
-
-vim.api.nvim_set_keymap("v", "<space>lf", "<Esc><cmd>lua FormatFunction()<CR>", { noremap = true })
+-- -- 部分格式化，which-key 的设置方法有问题，似乎只是语法没有理解到位
+-- -- https://vi.stackexchange.com/questions/36946/how-to-add-keymapping-for-lsp-code-formatting-in-visual-mode
+-- function FormatFunction()
+--   vim.lsp.buf.format({
+--     async = true,
+--     range = {
+--       ["start"] = vim.api.nvim_buf_get_mark(0, "<"),
+--       ["end"] = vim.api.nvim_buf_get_mark(0, ">"),
+--     },
+--   })
+-- end
+--
+-- vim.api.nvim_set_keymap("v", "<space>lf", "<Esc><cmd>lua FormatFunction()<CR>", { noremap = true })
 
 -- TODO 这两个写有问题，FileType 不是这么用的
 vim.cmd("autocmd FileType sh lua BashLeaderX()")
