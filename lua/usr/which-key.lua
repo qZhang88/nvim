@@ -73,7 +73,7 @@ wk.add({
   { "<space>l",  group = "language" },
   { "<space>la", "<cmd>lua vim.lsp.buf.code_action()<cr>",            desc = "code action" },
   { "<space>lc", "<cmd>Commentary<cr>",                               desc = "comment code" },
-  { "<space>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>",   desc = "format current buffer" },
+  { "<space>lf", function() vim.lsp.buf.format() end,                 desc = "format current buffer" },
   { "<space>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", desc = "lsp goto next" },
   { "<space>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", desc = "lsp goto prev" },
   { "<space>ln", "<cmd>lua vim.lsp.buf.rename()<cr>",                 desc = "rename" },
@@ -138,7 +138,22 @@ wk.add({
     mode = { "v" },
     { "<space>l",  group = "language" },
     { "<space>lc", ":Commentary<cr>",                                     desc = "comment code" },
-    { "<space>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>",     desc = "format current buffer" },
+    {
+      "<space>lf",
+      function()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), 'n', true)
+        vim.schedule(function()
+          vim.lsp.buf.format({
+            range = {
+              ["start"] = vim.api.nvim_buf_get_mark(0, "<"),
+              ["end"] = vim.api.nvim_buf_get_mark(0, ">"),
+            },
+            async = true,
+          })
+        end)
+      end,
+      desc = "format selection"
+    },
     { "<space>s",  group = "search" },
     { "<space>sp", "<cmd>lua require('spectre').open_visual()<cr>",       desc = "search" },
     { "q",         "<cmd>q<cr>",                                          desc = "close window" },
