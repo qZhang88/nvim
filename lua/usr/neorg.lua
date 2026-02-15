@@ -5,8 +5,8 @@ require("neorg").setup {
     ["core.dirman"] = { -- Manages Neorg workspaces
       config = {
         workspaces = {
-	  work = "~/ws/code/neovim/notes/work",
-	  home = "~/ws/code/neovim/notes/home",
+          work = "~/Desktop/Projects/neovim/gtd/work",
+	  home = "~/Desktop/Projects/neovim/gtd/home",
 	},
         index = "index.norg",
       },

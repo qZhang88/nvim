@@ -7,6 +7,7 @@ local options = {
   completeopt = { "menuone", "noselect" }, -- mostly just for cmp
   conceallevel = 0,  -- so that `` is visible in markdown files
   fileencoding = "utf-8", -- the encoding written to a file
+  fileencodings = "utf-8,ucs-bom,gb18030,gbk,gb2312,cp936", -- the encoding written to a file
   hlsearch = true,   -- highlight all matches on previous search pattern
   pumheight = 10,    -- pop up menu height
   showmode = false,  -- we don't need to see things like -- INSERT -- anymore

@@ -34,10 +34,11 @@ require("lazy").setup({
   { "neovim/nvim-lspconfig" },    -- enable LSP
   { "williamboman/mason.nvim" },  -- simple to use language server installer
   { "williamboman/mason-lspconfig.nvim" },
-  { "jose-elias-alvarez/null-ls.nvim" }, -- for formatters and linters
+  -- { "jose-elias-alvarez/null-ls.nvim" },
+  { "utilyre/barbecue.nvim" }, -- for formatters and linters
+  { "nvimtools/none-ls.nvim"},
   { "j-hui/fidget.nvim", tag = "legacy" },
   { "SmiteshP/nvim-navic" },
-  { "utilyre/barbecue.nvim" },
   { "kosayoda/nvim-lightbulb" },
 
   --treesitter
@@ -143,12 +144,23 @@ require("lazy").setup({
   "gbrlsnchs/telescope-lsp-handlers.nvim",
   "jakemason/ouroboros",          -- quickly switch between header and source file in C/C++ project
   -- 其他
-  "ggandor/leap.nvim",            -- 快速移动
+  -- "ggandor/leap.nvim",            -- 快速移动
+  {
+    url = "https://codeberg.org/andyg/leap.nvim",
+      -- config...
+  },
   { "crusj/bookmarks.nvim", branch = "main" }, -- 书签
   "tyru/open-browser.vim",        -- 使用 gx 打开链接
-  "keaising/im-select.nvim",      -- 自动切换输入法
+  -- {                               -- 自动切换输入法
+  --   "keaising/im-select.nvim",
+  --   lazy = false,
+  --   opts = {
+  --     default_im_select = "com.sogou.inputmethod.sogou.pinyin", --"com.apple.keylayout.ABC",
+  --     default_command = "macism", --"im-select",
+  --   },
+  -- },
   "olimorris/persisted.nvim",     -- 打开 vim 的时候，自动回复上一次打开的样子
-  "anuvyklack/hydra.nvim",        -- 消除重复快捷键，可以用于调整 window 大小等
+  "nvimtools/hydra.nvim",        -- 消除重复快捷键，可以用于调整 window 大小等
   "ojroques/vim-oscyank",         -- 让 nvim 在远程 server 上拷贝到本地剪切板上
   "azabiong/vim-highlighter",     -- 高亮多个搜索内容
   "dstein64/vim-startuptime",     -- 分析 nvim 启动时间
