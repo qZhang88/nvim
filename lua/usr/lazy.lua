@@ -14,7 +14,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   -- 基础
   "nvim-lua/plenary.nvim",        -- 很多 lua 插件依赖的库
-  "kyazdani42/nvim-web-devicons", -- 显示图标
+  "nvim-tree/nvim-web-devicons", -- 显示图标
   "folke/which-key.nvim",         -- 用于配置和提示快捷键
   "kkharji/sqlite.lua",           -- 数据库
 
@@ -160,7 +160,7 @@ require("lazy").setup({
   --   },
   -- },
   "olimorris/persisted.nvim",     -- 打开 vim 的时候，自动回复上一次打开的样子
-  "nvimtools/hydra.nvim",        -- 消除重复快捷键，可以用于调整 window 大小等
+  "nvimtools/hydra.nvim",         -- 消除重复快捷键，可以用于调整 window 大小等
   "ojroques/vim-oscyank",         -- 让 nvim 在远程 server 上拷贝到本地剪切板上
   "azabiong/vim-highlighter",     -- 高亮多个搜索内容
   "dstein64/vim-startuptime",     -- 分析 nvim 启动时间
