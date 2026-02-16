@@ -316,7 +316,6 @@ require("lazy").setup({
     "tyru/open-browser.vim",      -- 使用 gx 打开链接
     keys = { { "gx", mode = { "n", "x" } } }
   },
-  { "ojroques/vim-oscyank", event = "TextYankPost" },  -- 让 nvim 在远程 server 上拷贝到本地剪切板上
   { "dstein64/vim-startuptime", cmd = "StartupTime" }, -- 分析 nvim 启动时间
   { "voldikss/vim-translator", cmd = { "Translate", "TranslateW" } },
   {

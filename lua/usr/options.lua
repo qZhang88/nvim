@@ -1,3 +1,4 @@
+
 -- =========================================================================
 -- 1. 全局变量 (Globals)
 -- =========================================================================
@@ -121,18 +122,17 @@ autocmd("BufReadPost", {
 })
 
 -- OSCYank 配置 (远程服务器剪贴板同步)
-autocmd("TextYankPost", {
-  group = augroup,
-  callback = function()
-    local op = vim.v.event.operator
-    local reg = vim.v.event.regname
-    -- 合并了复制 (y) 和删除 (d) 到 '+' 寄存器的逻辑
-    if (op == "y" or op == "d") and reg == "+" then
-      vim.cmd("OSCYankRegister +")
-    end
-  end,
-  desc = "Sync to remote clipboard via OSCYank",
-})
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
 
 -- =========================================================================
 -- 5. 加载遗留 Vim 脚本 (Legacy Vim Scripts)
