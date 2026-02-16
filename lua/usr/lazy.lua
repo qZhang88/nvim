@@ -14,12 +14,36 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   -- 基础
   "nvim-lua/plenary.nvim",        -- 很多 lua 插件依赖的库
-  "nvim-tree/nvim-web-devicons", -- 显示图标
-  "folke/which-key.nvim",         -- 用于配置和提示快捷键
+  "nvim-tree/nvim-web-devicons",  -- 显示图标
+  {
+    "folke/which-key.nvim",       -- 用于配置和提示快捷键
+    event = "VeryLazy",
+    config = function() require("usr.which-key") end,
+  },
   "kkharji/sqlite.lua",           -- 数据库
 
   -- 补全
-  { "hrsh7th/nvim-cmp" },         -- The completion plugin
+  {
+    "hrsh7th/nvim-cmp",           -- enable LSP
+    event = "InsertEnter",
+    dependencies = {
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lua",
+      "L3MON4D3/LuaSnip",
+      "rafamadriz/friendly-snippets",
+      {
+        "L3MON4D3/LuaSnip",
+        config = function()
+          -- 加载自定义 snippet
+          require("luasnip.loaders.from_snipmate").lazy_load({ paths = "~/.config/nvim/snippets/" })
+        end,
+      },
+    },
+    config = function() require("usr.cmp") end,
+  },                              -- The completion plugin
   { "hrsh7th/cmp-buffer" },       -- buffer completions
   { "hrsh7th/cmp-path" },         -- path completions
   { "saadparwaiz1/cmp_luasnip" }, -- snippet completions
@@ -27,71 +51,183 @@ require("lazy").setup({
   { "hrsh7th/cmp-nvim-lua" },
 
   -- Snippets
-  { "L3MON4D3/LuaSnip" },         --snippet engine
+  { "L3MON4D3/LuaSnip" },         -- snippet engine
   { "rafamadriz/friendly-snippets" }, -- a bunch of snippets to use
 
   -- LSP
-  { "neovim/nvim-lspconfig" },    -- enable LSP
-  { "williamboman/mason.nvim" },  -- simple to use language server installer
-  { "williamboman/mason-lspconfig.nvim" },
-  -- { "jose-elias-alvarez/null-ls.nvim" },
-  { "utilyre/barbecue.nvim" }, -- for formatters and linters
-  { "nvimtools/none-ls.nvim"},
-  { "j-hui/fidget.nvim", tag = "legacy" },
-  { "SmiteshP/nvim-navic" },
-  { "kosayoda/nvim-lightbulb" },
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "nvimtools/none-ls.nvim",
+      "mattn/efm-langserver",         -- 支持 bash
+      {
+        "j-hui/fidget.nvim",
+        tag = "legacy",
+        config = function() require("fidget").setup() end,
+      },
+      {
+        "SmiteshP/nvim-navic",
+        config = function() require("nvim-navic").setup() end,
+      },
+      {
+        "kosayoda/nvim-lightbulb",
+        config = function() require("nvim-lightbulb").update_lightbulb() end,
+      },
+      {
+        "utilyre/barbecue.nvim", -- for formatters and linters
+        config = function() require("barbecue").setup() end,
+      },
+    },
+    config = function() require("usr.lsp") end,
+  },
+  -- LSP 增强
+  {
+    "jackguo380/vim-lsp-cxx-highlight", -- ccls 高亮
+    ft = { "c", "cpp" }
+  },
+  {
+    "gbrlsnchs/telescope-lsp-handlers.nvim",
+    event = "LspAttach"
+  },
+  {
+    "jakemason/ouroboros",          -- quickly switch between header and source file in C/C++ project
+    ft = { "c", "cpp" },
+    cmd = "Ouroboros"
+  },
 
-  --treesitter
+  -- LLM
+  {
+    "olimorris/codecompanion.nvim",
+    cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
+    config = function() require("usr.codecompanion") end,
+  },
+
+  -- treesitter
   {
     "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile" },
     build = ":TSUpdate",
+    dependencies = {
+      "RRethy/nvim-treesitter-textsubjects",
+      "nvim-treesitter/nvim-treesitter-textobjects",
+    },
+    config = function() require("usr.nvim-treesitter") end,
   },
-  "RRethy/nvim-treesitter-textsubjects",
-  "nvim-treesitter/nvim-treesitter-textobjects",
   {
-    "cshuaimin/ssr.nvim",
-    module = "ssr",
-    vim.keymap.set({ "n", "x" }, "<leader>r", function()
-      require("ssr").open()
-    end),
-  }, -- 结构化查询和替换
+    "cshuaimin/ssr.nvim",         -- 结构化查询和替换
+    keys = {
+      { "<leader>r", function() require("ssr").open() end, mode = { "n", "x" }, desc = "Structural Replace" }
+    },
+  },
 
-  -- ui
-  "stevearc/aerial.nvim",         -- 导航栏
-  "kyazdani42/nvim-tree.lua",     -- 文件树
-  "akinsho/bufferline.nvim",      -- buffer
-  "nvim-lualine/lualine.nvim",    -- 状态栏
-  "kazhala/close-buffers.nvim",   -- 一键删除不可见 buffer
-  "gelguy/wilder.nvim",           -- 更加智能的命令窗口
-  "romgrk/fzy-lua-native",        -- wilder.nvim 的依赖
-  "xiyaowong/nvim-transparent",   -- 可以移除掉背景色，让 vim 透明
-  { "goolord/alpha-nvim", event = "VimEnter" },
-  -- 颜色主题
-  "folke/tokyonight.nvim",
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-
-  -- git 管理
-  "tpope/vim-fugitive",           -- 显示 git blame，实现一些基本操作的快捷执行
-  "rhysd/git-messenger.vim",      -- 利用 git blame 显示当前行的 commit message
-  "lewis6991/gitsigns.nvim",      -- 显示改动的信息
-  "f-person/git-blame.nvim",      -- 显示 git blame 信息
-
-  -- 基于 telescope 的搜索
-  "nvim-telescope/telescope.nvim",
+  -- UI & Navigation
   {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    build = "make",
-    cond = function()
-      return vim.fn.executable("make") == 1
+    "kyazdani42/nvim-tree.lua",
+    cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeFindFile" }, -- 敲命令时才加载文件树
+    config = function() require("usr.nvim-tree") end,
+  },
+  {
+    "stevearc/aerial.nvim",       -- 导航栏
+    cmd = { "AerialToggle", "AerialNavToggle" },
+    config = function()
+      require("aerial").setup({
+        backends = { "markdown", "man", "lsp", "treesitter" },
+        layout = { max_width = { 30, 0.15 }, placement = "edge", default_direction = "left" },
+        attach_mode = "global",
+      })
     end,
   },
-  "nvim-telescope/telescope-frecency.nvim", -- 查找最近打开的文件
+  {
+    "akinsho/bufferline.nvim",    -- buffer
+    event = "VeryLazy",
+    config = function() require("usr.bufferline") end,
+  },
+  {
+    "nvim-lualine/lualine.nvim",  -- 状态栏
+    event = "VeryLazy",
+    config = function() require("lualine").setup() end,
+  },
+  {
+    "kazhala/close-buffers.nvim", -- 一键删除不可见 buffer
+    cmd = { "BDelete", "BWipeout" }
+  },
+  {
+    "xiyaowong/nvim-transparent", -- 可以移除掉背景色，让 vim 透明
+    cmd = "TransparentToggle" },
+  {
+    "goolord/alpha-nvim",         -- 启动时展示的 Dashboard
+    event = "VimEnter",
+    config = function() require("usr.alpha") end
+  },
+  {
+    "gelguy/wilder.nvim",         -- 更加智能的命令窗口
+    event = "CmdlineEnter",
+    dependencies = { "romgrk/fzy-lua-native" },
+    config = function() require("usr.wilder") end,
+  },
 
-  -- 命令执行
-  "voldikss/vim-floaterm",        -- 终端
-  "akinsho/toggleterm.nvim",      -- 性能好点，但是易用性和稳定性都比较差
-  "CRAG666/code_runner.nvim",     -- 一键运行代码
-  "samjwill/nvim-unception",      -- 嵌套 nvim 自动 offload 到 host 中
+  -- 颜色主题
+  "folke/tokyonight.nvim",
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function() require("usr.colorscheme") end
+  },
+
+  -- git 管理
+  {
+    "tpope/vim-fugitive",         -- 显示 git blame，实现一些基本操作的快捷执行
+    cmd = { "Git", "G", "Gdiff", "Gblame" }
+  },
+  {
+    "rhysd/git-messenger.vim",      -- 利用 git blame 显示当前行的 commit message
+    cmd = "GitMessenger",
+  },
+  {
+    "f-person/git-blame.nvim",    -- 显示 git blame 信息
+    event = { "BufReadPre", "BufNewFile" }
+  },
+  {
+    "lewis6991/gitsigns.nvim",    -- 显示改动的信息
+    event = { "BufReadPre", "BufNewFile" },
+    config = function() require("gitsigns").setup({ signcolumn = false, numhl = true }) end,
+  },
+
+  -- 基于 telescope 的搜索
+  {
+    "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",             -- 敲命令时才唤醒 Telescope
+    dependencies = {
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+        cond = function() return vim.fn.executable("make") == 1 end,
+      },
+      "nvim-telescope/telescope-frecency.nvim",
+      "xiyaowong/telescope-emoji.nvim",
+    },
+    config = function() require("usr.telescope") end,
+  },
+
+  -- 运行与终端
+  {
+    "voldikss/vim-floaterm",      -- 终端
+    cmd = { "FloatermNew", "FloatermToggle" }
+  },
+  {
+    "akinsho/toggleterm.nvim",    -- 性能好点，但是易用性和稳定性都比较差
+    cmd = "ToggleTerm"
+  },
+  { "samjwill/nvim-unception", lazy = false }, -- 嵌套 nvim 自动 offload 到 host 中，防止嵌套 Neovim，通常需要 lazy=false
+  {
+    "CRAG666/code_runner.nvim",   -- 一键运行代码
+    cmd = { "RunCode", "RunFile", "RunProject" },
+    config = function() require("usr.code_runner") end,
+  },
 
   -- markdown
   -- 如果发现插件有问题， 可以进入到 ~/.local/share/nvim/lazy/markdown-preview.nvim/app && npm install
@@ -101,72 +237,110 @@ require("lazy").setup({
     ft = { "markdown" },
     build = "cd app && npm install",
   },
-  "mzlogin/vim-markdown-toc",     -- 自动目录生成
-  "dhruvasagar/vim-table-mode",   -- 快速编辑 markdown 的表格
-  "xiyaowong/telescope-emoji.nvim", -- 使用 telescope 搜索 emoji 表情
+  {
+    "mzlogin/vim-markdown-toc",   -- 自动目录生成
+    ft = "markdown", cmd = { "GenTocGFM", "UpdateToc" }
+  },
+  {
+    "dhruvasagar/vim-table-mode", -- 快速编辑 markdown 的表格
+    ft = "markdown", cmd = "TableModeToggle"
+  },
 
   -- 高效编辑
-  "tpope/vim-commentary",         -- 快速注释代码
-  "kylechui/nvim-surround",       -- 快速编辑单词两侧的符号
-  -- "tpope/vim-sleuth",             -- 自动设置 tabstop 之类的
-  "tpope/vim-repeat",             -- 更加强大的 `.`
-  "windwp/nvim-autopairs",        -- 自动括号匹配
-  "honza/vim-snippets",           -- 安装公共的的 snippets
-  "mbbill/undotree",              -- 显示编辑的历史记录
-  "mg979/vim-visual-multi",       -- 同时编辑多个位置
-  "AckslD/nvim-neoclip.lua",      -- 保存 macro
-  "windwp/nvim-spectre",          -- 媲美 vscode 的多文件替换
-  'filipdutescu/renamer.nvim',    -- vscode renaming UI for Neovim
+  { "tpope/vim-commentary", keys = { "gc", "gcc" } },
+  { "tpope/vim-repeat", event = "VeryLazy" },
+  { "mbbill/undotree", cmd = "UndotreeToggle" },
+  { "mg979/vim-visual-multi", keys = { "<C-n>", "<C-Down>", "<C-Up>" } },
+  { "honza/vim-snippets", event = "InsertEnter" },
+  { "windwp/nvim-spectre", cmd = "Spectre" },
+  { "filipdutescu/renamer.nvim", cmd = "Renamer" },
+  {
+    "kylechui/nvim-surround",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function() require("nvim-surround").setup() end,
+  },
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = function() require("nvim-autopairs").setup() end,
+  },
+  {
+    "AckslD/nvim-neoclip.lua",
+    event = "VeryLazy",
+    config = function() require('neoclip').setup() end,
+  },
 
   -- 高亮
-  "norcalli/nvim-colorizer.lua", -- 显示 #FFFFFF
-  "andymass/vim-matchup",        -- 高亮匹配的元素，例如 #if 和 #endif
+  {
+    "NvChad/nvim-colorizer.lua",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require("colorizer").setup({ "css", "javascript", "vim", html = { mode = "foreground" } })
+    end,
+  },
+  { "andymass/vim-matchup", event = { "BufReadPost", "BufNewFile" } },
+  { "azabiong/vim-highlighter", cmd = "Hi" },
 
   -- 时间管理
-  -- "nvim-orgmode/orgmode", -- orgmode 日程管理
   {
       "vhyrro/luarocks.nvim",
-      priority = 1000, -- We'd like this plugin to load first out of the rest
-      config = true, -- This automatically runs `require("luarocks-nvim").setup()`
+      priority = 1000,            -- We'd like this plugin to load first out of the rest
+      config = true,              -- This automatically runs `require("luarocks-nvim").setup()`
   },
   {
       "nvim-neorg/neorg",
+      ft = "norg",                -- 只有打开 .norg 文件才加载
+      cmd = "Neorg",              -- 或者输入 :Neorg 命令时加载
       dependencies = { "luarocks.nvim" },
-      lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-      -- version = "*", -- Pin Neorg to the latest stable release
-      -- config = true,
+      config = function() require("usr.neorg") end,
   },
-  -- use 'wakatime/vim-wakatime' -- 代码时间统计
-  --
-  -- lsp 增强
-  "jackguo380/vim-lsp-cxx-highlight", -- ccls 高亮
-  "mattn/efm-langserver",         -- 支持 bash
-  "gbrlsnchs/telescope-lsp-handlers.nvim",
-  "jakemason/ouroboros",          -- quickly switch between header and source file in C/C++ project
+
   -- 其他
-  -- "ggandor/leap.nvim",            -- 快速移动
   {
     url = "https://codeberg.org/andyg/leap.nvim",
-      -- config...
+    event = "VeryLazy",
+    config = function() require("leap").add_default_mappings() end,
   },
-  { "crusj/bookmarks.nvim", branch = "main" }, -- 书签
-  "tyru/open-browser.vim",        -- 使用 gx 打开链接
-  -- {                               -- 自动切换输入法
-  --   "keaising/im-select.nvim",
-  --   lazy = false,
-  --   opts = {
-  --     default_im_select = "com.sogou.inputmethod.sogou.pinyin", --"com.apple.keylayout.ABC",
-  --     default_command = "macism", --"im-select",
-  --   },
-  -- },
-  "olimorris/persisted.nvim",     -- 打开 vim 的时候，自动回复上一次打开的样子
-  "nvimtools/hydra.nvim",         -- 消除重复快捷键，可以用于调整 window 大小等
-  "ojroques/vim-oscyank",         -- 让 nvim 在远程 server 上拷贝到本地剪切板上
-  "azabiong/vim-highlighter",     -- 高亮多个搜索内容
-  "dstein64/vim-startuptime",     -- 分析 nvim 启动时间
-  "voldikss/vim-translator",      -- 翻译
+  {
+    "crusj/bookmarks.nvim",
+    branch = "main",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require("bookmarks").setup({
+        mappings_enabled = false,
+        virt_pattern = { "*.lua", "*.md", "*.c", "*.h", "*.sh" },
+      })
+    end,
+  },
+  {
+    "tyru/open-browser.vim",      -- 使用 gx 打开链接
+    keys = { { "gx", mode = { "n", "x" } } }
+  },
+  { "ojroques/vim-oscyank", event = "TextYankPost" },  -- 让 nvim 在远程 server 上拷贝到本地剪切板上
+  { "dstein64/vim-startuptime", cmd = "StartupTime" }, -- 分析 nvim 启动时间
+  { "voldikss/vim-translator", cmd = { "Translate", "TranslateW" } },
+  {
+    "olimorris/persisted.nvim",
+    lazy = false,
+    config = function() require("persisted").setup({ autoload = true }) end,
+  },
+  {
+    "nvimtools/hydra.nvim",       -- 消除重复快捷键，可以用于调整 window 大小等
+    event = "VeryLazy",
+    config = function() require("usr.hydra") end,
+  },
   {
     "OscarCreator/rsync.nvim",    -- 自动同步代码远程
+    cmd = { "RsyncUp", "RsyncDown" },
     build = "make",               -- 实在不行，进入到 ~/.local/share/nvim/lazy/rsync.nvim 中执行下 make
   },
+
+  {
+    "usr.version",
+    dir = vim.fn.stdpath("config") .. "/lua/usr",
+    name = "usr-version",
+    event = "VeryLazy",
+    config = function() require("usr.version") end,
+  }
+
 }, {})
