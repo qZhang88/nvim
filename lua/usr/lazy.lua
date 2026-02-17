@@ -24,35 +24,24 @@ require("lazy").setup({
 
   -- 补全
   {
-    "hrsh7th/nvim-cmp",           -- enable LSP
+    "hrsh7th/nvim-cmp",           -- the completion plugin
     event = "InsertEnter",
     dependencies = {
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-cmdline",      -- 核心：命令行补全
+      "hrsh7th/cmp-buffer",       -- 在命令行搜索时提供 buffer 里的词汇
+      "hrsh7th/cmp-path",         -- 在命令行输入路径时提供补全
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lua",
-      "L3MON4D3/LuaSnip",
-      "rafamadriz/friendly-snippets",
       {
         "L3MON4D3/LuaSnip",
+        dependencies = { "rafamadriz/friendly-snippets" },
         config = function()
-          -- 加载自定义 snippet
           require("luasnip.loaders.from_snipmate").lazy_load({ paths = "~/.config/nvim/snippets/" })
         end,
       },
     },
     config = function() require("usr.cmp") end,
-  },                              -- The completion plugin
-  { "hrsh7th/cmp-buffer" },       -- buffer completions
-  { "hrsh7th/cmp-path" },         -- path completions
-  { "saadparwaiz1/cmp_luasnip" }, -- snippet completions
-  { "hrsh7th/cmp-nvim-lsp" },
-  { "hrsh7th/cmp-nvim-lua" },
-
-  -- Snippets
-  { "L3MON4D3/LuaSnip" },         -- snippet engine
-  { "rafamadriz/friendly-snippets" }, -- a bunch of snippets to use
+  },
 
   -- LSP
   {
@@ -77,7 +66,7 @@ require("lazy").setup({
         config = function() require("nvim-lightbulb").update_lightbulb() end,
       },
       {
-        "utilyre/barbecue.nvim", -- for formatters and linters
+        "utilyre/barbecue.nvim",    -- for formatters and linters
         config = function() require("barbecue").setup() end,
       },
     },
@@ -108,12 +97,8 @@ require("lazy").setup({
   -- treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPost", "BufNewFile" },
+    lazy = false,
     build = ":TSUpdate",
-    dependencies = {
-      "RRethy/nvim-treesitter-textsubjects",
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
     config = function() require("usr.nvim-treesitter") end,
   },
   {
@@ -156,17 +141,38 @@ require("lazy").setup({
   },
   {
     "xiyaowong/nvim-transparent", -- 可以移除掉背景色，让 vim 透明
-    cmd = "TransparentToggle" },
+    cmd = "TransparentToggle"
+  },
   {
     "goolord/alpha-nvim",         -- 启动时展示的 Dashboard
     event = "VimEnter",
     config = function() require("usr.alpha") end
   },
   {
-    "gelguy/wilder.nvim",         -- 更加智能的命令窗口
-    event = "CmdlineEnter",
-    dependencies = { "romgrk/fzy-lua-native" },
-    config = function() require("usr.wilder") end,
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- Noice 的核心美化预设
+      presets = {
+        bottom_search = true, -- 搜索框依然在底部（很多人习惯这样，如果设为 false 则会在屏幕中间弹出）
+        command_palette = false, -- 将命令行和补全菜单组合成类似 VSCode 命令面板的样式
+        long_message_to_split = true, -- 极长的报错信息会在新分屏显示，而不会卡住屏幕
+        inc_rename = false,
+        lsp_doc_border = true, -- 为悬浮文档添加边框
+      },
+      cmdline = {
+        view = "cmdline",
+      },
+      -- 确保 Noice 接管 cmp 的弹出菜单
+      popupmenu = {
+        enabled = true,
+        backend = "cmp",
+      },
+    },
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
   },
 
   -- 颜色主题
@@ -231,12 +237,12 @@ require("lazy").setup({
 
   -- markdown
   -- 如果发现插件有问题， 可以进入到 ~/.local/share/nvim/lazy/markdown-preview.nvim/app && npm install
-  {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreview" },
-    ft = { "markdown" },
-    build = "cd app && npm install",
-  },
+  -- {
+  --   "iamcco/markdown-preview.nvim",
+  --   cmd = { "MarkdownPreview" },
+  --   ft = { "markdown" },
+  --   build = "cd app && npm install",
+  -- },
   {
     "mzlogin/vim-markdown-toc",   -- 自动目录生成
     ft = "markdown", cmd = { "GenTocGFM", "UpdateToc" }
@@ -253,7 +259,6 @@ require("lazy").setup({
   { "mg979/vim-visual-multi", keys = { "<C-n>", "<C-Down>", "<C-Up>" } },
   { "honza/vim-snippets", event = "InsertEnter" },
   { "windwp/nvim-spectre", cmd = "Spectre" },
-  { "filipdutescu/renamer.nvim", cmd = "Renamer" },
   {
     "kylechui/nvim-surround",
     event = { "BufReadPost", "BufNewFile" },
@@ -282,25 +287,23 @@ require("lazy").setup({
   { "azabiong/vim-highlighter", cmd = "Hi" },
 
   -- 时间管理
-  {
-      "vhyrro/luarocks.nvim",
-      priority = 1000,            -- We'd like this plugin to load first out of the rest
-      config = true,              -- This automatically runs `require("luarocks-nvim").setup()`
-  },
-  {
-      "nvim-neorg/neorg",
-      ft = "norg",                -- 只有打开 .norg 文件才加载
-      cmd = "Neorg",              -- 或者输入 :Neorg 命令时加载
-      dependencies = { "luarocks.nvim" },
-      config = function() require("usr.neorg") end,
-  },
+  -- {
+  --   "nvim-neorg/neorg",
+  --    lazy = false,
+  --    -- version = "*",              -- Pin Neorg to the latest stable release
+  --    version = false,            -- get latest on branch
+  --    ft = "norg",                -- 只有打开 .norg 文件才加载
+  --    cmd = "Neorg",              -- 或者输入 :Neorg 命令时加载
+  --    -- dependencies = { "nvim-neorg/tree-sitter-norg" },
+  --    config = function() require("usr.neorg") end,
+  -- },
 
   -- 其他
-  {
-    url = "https://codeberg.org/andyg/leap.nvim",
-    event = "VeryLazy",
-    config = function() require("leap").add_default_mappings() end,
-  },
+  -- {
+  --   url = "https://codeberg.org/andyg/leap.nvim",
+  --   event = "VeryLazy",
+  --   config = function() require("leap").add_default_mappings() end,
+  -- },
   {
     "crusj/bookmarks.nvim",
     branch = "main",
@@ -333,7 +336,6 @@ require("lazy").setup({
     cmd = { "RsyncUp", "RsyncDown" },
     build = "make",               -- 实在不行，进入到 ~/.local/share/nvim/lazy/rsync.nvim 中执行下 make
   },
-
   {
     "usr.version",
     dir = vim.fn.stdpath("config") .. "/lua/usr",
@@ -341,5 +343,16 @@ require("lazy").setup({
     event = "VeryLazy",
     config = function() require("usr.version") end,
   }
-
-}, {})
+}, {
+  -- -- 全局配置字典开始
+  -- change_detection = {
+  --   enabled = true,
+  --   notify = true,
+  -- },
+  -- performance = {
+  --   cache = {
+  --     enabled = true,
+  --   },
+  --   reset_packpath = true, -- 强制重置包路径，防止重复加载
+  -- },
+})

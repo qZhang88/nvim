@@ -53,7 +53,7 @@ wk.add({
   { "<space>9",  "<cmd>9wincmd w <cr>",                               desc = "jump to window 9" },
   { "<space>a",  group = "misc" },
   { "<space>aa", "<cmd>InsertUUID<cr>",                               desc = "remove trailing space" },
-  { "<space>ad", "<cmd>call TrimWhitespace()<cr>",                    desc = "remove trailing space" },
+  { "<space>ad", "<cmd>TrimWhitespace<cr>",                    desc = "remove trailing space" },
   { "<space>at", "<Plug>Translate",                                   desc = "translate current word" },
   { "<space>b",  group = "buffer" },
   { "<space>bd", "<cmd>bdelete %<cr>",                                desc = "close current buffers" },

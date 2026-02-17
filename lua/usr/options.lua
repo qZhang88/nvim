@@ -54,7 +54,7 @@ local options = {
   -- 折叠设置 (Treesitter)
   foldlevelstart = 99,
   foldmethod = "expr",
-  foldexpr = "nvim_treesitter#foldexpr()",
+  foldexpr = "v:lua.vim.treesitter.foldexpr()",
 }
 
 -- 集中设置普通选项
@@ -134,15 +134,22 @@ vim.g.clipboard = {
   },
 }
 
--- =========================================================================
--- 5. 加载遗留 Vim 脚本 (Legacy Vim Scripts)
--- =========================================================================
-local config_path = vim.fn.stdpath("config")
-local legacy_scripts = { "misc.vim", "debug.vim" }
+-- 自动关闭 NvimTree 的逻辑
+vim.api.nvim_create_autocmd("BufEnter", {
+  nested = true,
+  callback = function()
+    -- 如果当前 Tab 只有一个窗口，且该窗口的名字以 'NvimTree_' 开头，则退出
+    if vim.fn.winnr('$') == 1 and vim.fn.bufname():match('NvimTree_') then
+      vim.cmd('quit')
+    end
+  end,
+})
 
-for _, script in ipairs(legacy_scripts) do
-  local file = config_path .. "/vim/" .. script
-  if vim.fn.filereadable(file) == 1 then
-    vim.cmd("source " .. file)
-  end
-end
+-- 消除行尾空格并统一格式
+vim.api.nvim_create_user_command("TrimWhitespace", function()
+  local save = vim.fn.winsaveview()      -- 保存当前光标和屏幕视野
+  vim.cmd("keeppatterns %s/\\s\\+$//e")  -- 静默删除行尾多余空格
+  vim.fn.winrestview(save)               -- 恢复光标视野
+  vim.cmd("retab")                       -- 统一 Tab 格式
+end, { desc = "remove trailing space & tab mix-use" })
+
