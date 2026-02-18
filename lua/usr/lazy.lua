@@ -287,16 +287,21 @@ require("lazy").setup({
   { "azabiong/vim-highlighter", cmd = "Hi" },
 
   -- 时间管理
-  -- {
-  --   "nvim-neorg/neorg",
-  --    lazy = false,
-  --    -- version = "*",              -- Pin Neorg to the latest stable release
-  --    version = false,            -- get latest on branch
-  --    ft = "norg",                -- 只有打开 .norg 文件才加载
-  --    cmd = "Neorg",              -- 或者输入 :Neorg 命令时加载
-  --    -- dependencies = { "nvim-neorg/tree-sitter-norg" },
-  --    config = function() require("usr.neorg") end,
-  -- },
+  {
+    "nvim-neorg/neorg",
+     lazy = false,
+     -- version = "*",              -- Pin Neorg to the latest stable release
+     version = false,            -- get latest on branch
+     ft = "norg",                -- 只有打开 .norg 文件才加载
+     cmd = "Neorg",              -- 或者输入 :Neorg 命令时加载
+     dependencies = {
+       'nvim-neorg/lua-utils.nvim',
+       'pysan3/pathlib.nvim',
+       'nvim-neotest/nvim-nio',
+       -- "nvim-neorg/tree-sitter-norg"
+     },
+     config = function() require("usr.neorg") end,
+  },
 
   -- 其他
   -- {
