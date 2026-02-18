@@ -35,7 +35,12 @@ wk.add({
   { "<leader>s", "<cmd>Telescope lsp_dynamic_workspace_symbols <cr>", desc = "search symbols in project" },
   -- leader t : markdown table mode
   -- leader x used for map language specific function
-  -- " 使用 <leader> [number] 切换到第 [number] 个 window
+  -- <leader>l for LLM assistant
+  { "<leader>l",  group = "AI (LLM)" },
+  { "<leader>la", "<cmd>CodeCompanionActions<cr>",                    desc = "AI Actions" },
+  { "<leader>lc", "<cmd>CodeCompanionChat Toggle<cr>",                desc = "Chat Toggle" },
+  { "<leader>li", "<cmd>CodeCompanion<cr>",                           desc = "Inline Prompt" },
+  -- " 使用 <space> [number] 切换到第 [number] 个 window
   { "<space>0",  "<cmd>10wincmd w <cr>",                              desc = "jump to window 0" },
   { "<space>1",  "<cmd>1wincmd w <cr>",                               desc = "jump to window 1" },
   { "<space>2",  "<cmd>2wincmd w <cr>",                               desc = "jump to window 2" },
@@ -48,7 +53,7 @@ wk.add({
   { "<space>9",  "<cmd>9wincmd w <cr>",                               desc = "jump to window 9" },
   { "<space>a",  group = "misc" },
   { "<space>aa", "<cmd>InsertUUID<cr>",                               desc = "remove trailing space" },
-  { "<space>ad", "<cmd>call TrimWhitespace()<cr>",                    desc = "remove trailing space" },
+  { "<space>ad", "<cmd>TrimWhitespace<cr>",                           desc = "remove trailing space" },
   { "<space>at", "<Plug>Translate",                                   desc = "translate current word" },
   { "<space>b",  group = "buffer" },
   { "<space>bd", "<cmd>bdelete %<cr>",                                desc = "close current buffers" },
@@ -161,20 +166,6 @@ wk.add({
 })
 
 vim.api.nvim_set_keymap("i", "<c-g>", "<cmd>!ibus engine rime<cr>", { noremap = true })
-
--- -- 部分格式化，which-key 的设置方法有问题，似乎只是语法没有理解到位
--- -- https://vi.stackexchange.com/questions/36946/how-to-add-keymapping-for-lsp-code-formatting-in-visual-mode
--- function FormatFunction()
---   vim.lsp.buf.format({
---     async = true,
---     range = {
---       ["start"] = vim.api.nvim_buf_get_mark(0, "<"),
---       ["end"] = vim.api.nvim_buf_get_mark(0, ">"),
---     },
---   })
--- end
---
--- vim.api.nvim_set_keymap("v", "<space>lf", "<Esc><cmd>lua FormatFunction()<CR>", { noremap = true })
 
 -- TODO 这两个写有问题，FileType 不是这么用的
 vim.cmd("autocmd FileType sh lua BashLeaderX()")

@@ -132,3 +132,22 @@ cmp.setup({
     ghost_text = false,
   },
 })
+
+-- 针对搜索模式 `/` 和 `?` 的补全配置
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- 针对命令模式 `:` 的补全配置
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' } -- 让你在输 :e /xxx 的时候能补全路径
+  }, {
+    { name = 'cmdline' } -- 让你能补全 Neovim 命令（如 :verbose, :nmap 等）
+  }),
+  matching = { disallow_symbol_nonprefix_matching = false }
+})

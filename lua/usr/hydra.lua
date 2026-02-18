@@ -3,6 +3,8 @@ local Hydra = require("hydra")
 -- 首先按 c a ，然后就可以使用 hjkl 来调整窗口大小
 Hydra({
   name = "Adjust Window Size",
+  mode = "n",
+  body = "ca",
   config = {
     color = "pink",
     invoke_on_body = true,
@@ -10,13 +12,11 @@ Hydra({
       vim.o.virtualedit = "all"
     end,
   },
-  mode = "n",
-  body = "ca",
   heads = {
-    { "h",     "<cmd>vertical resize +10<cr>" },
-    { "l",     "<cmd>vertical resize -10<cr>" },
-    { "<Esc>", nil,                           { exit = true } },
-    { "<CR>",  nil,                           { exit = true } },
+    { "h",     "<cmd>vertical resize +10<cr>", { desc = "Resize Right" } },
+    { "l",     "<cmd>vertical resize -10<cr>", { desc = "Resize Left" } },
+    { "<Esc>", nil,    { exit = true, desc = "Exit" } },
+    { "<CR>",  nil,    { exit = true, desc = "Exit" } },
   },
 })
 
