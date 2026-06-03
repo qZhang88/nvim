@@ -1,12 +1,14 @@
--- Prevent re-sourcing when a local init.lua exists in CWD
-if vim.g.did_nvim_init then
-  return
-end
-vim.g.did_nvim_init = true
-
 -- Leader keys must be set before lazy.nvim
 vim.g.mapleader = ","
 vim.g.maplocalleader = ";"
+
+-- Prevent re-sourcing — lazy.nvim's own flag is the single source of truth.
+-- When the repo IS the config dir, Neovim may source init.lua a second time
+-- (opening it as a file re-triggers config sourcing). This guard mirrors
+-- lazy.nvim's own check to prevent the "Re-sourcing not supported" error.
+if vim.g.lazy_did_setup then
+  return
+end
 
 -- Check Neovim version
 require("usr.version")
