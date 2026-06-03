@@ -116,7 +116,6 @@ require("lazy").setup({
   },
   {
     "stevearc/aerial.nvim",       -- 导航栏
-    branch = "nvim-0.11",
     cmd = { "AerialToggle", "AerialNavToggle" },
     config = function()
       require("aerial").setup({
