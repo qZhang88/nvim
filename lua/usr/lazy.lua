@@ -341,13 +341,6 @@ require("lazy").setup({
     cmd = { "RsyncUp", "RsyncDown" },
     build = "make",               -- 实在不行，进入到 ~/.local/share/nvim/lazy/rsync.nvim 中执行下 make
   },
-  {
-    "usr.version",
-    dir = vim.fn.stdpath("config") .. "/lua/usr",
-    name = "usr-version",
-    event = "VeryLazy",
-    config = function() require("usr.version") end,
-  }
 }, {
   -- -- 全局配置字典开始
   -- change_detection = {
