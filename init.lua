@@ -12,7 +12,41 @@ vim.g.maplocalleader = ";"
 require("usr.version")
 
 -- Load all plugin and base config (was `lua require 'usr'` in init.vim)
-require("usr.init")
+require("usr.options")
+require("usr.lazy")
+
+-- Additional plugin setups not covered by lazy.lua config callbacks
+require("persisted").setup({ autoload = true })
+require("gitsigns").setup({ signcolumn = false, numhl = true })
+require("aerial").setup({
+  backends = { "markdown", "man", "lsp", "treesitter" },
+  layout = {
+    max_width = { 30, 0.15 },
+    placement = "edge",
+    default_direction = "left",
+  },
+  attach_mode = "global",
+})
+require("bookmarks").setup({
+  mappings_enabled = false,
+  virt_pattern = { "*.lua", "*.md", "*.c", "*.h", "*.sh" },
+})
+require("nvim-autopairs").setup()
+require("nvim-surround").setup()
+pcall(function() require("leap").add_default_mappings() end)
+pcall(function() require("nvim-colorizer").setup() end)
+
+-- Fold settings
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt.foldlevel = 99
+
+-- VimLeave workaround
+vim.api.nvim_create_autocmd({ "VimLeave" }, {
+  callback = function()
+    vim.cmd("sleep 10m")
+  end,
+})
 
 --- ============================================================
 --- Ported from init.vim / vim/misc.vim
