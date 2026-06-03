@@ -134,7 +134,11 @@ vim.g.gitblame_ignored_filetypes = { "lua", "markdown", "sh" }
 vim.cmd([[let @j = 'ysiw`\<Esc>']])
 vim.cmd([[let @k = 'ysiw"\<Esc>']])
 
--- Source remaining vimscript configs (wildmenu, debug helpers)
+-- Source vimscript configs if present (wildmenu, debug helpers)
 local config_dir = vim.fn.stdpath("config")
-vim.cmd("source " .. config_dir .. "/vim/debug.vim")
-vim.cmd("source " .. config_dir .. "/vim/wilder.vim")
+for _, script in ipairs({ "vim/debug.vim", "vim/wilder.vim" }) do
+  local path = config_dir .. "/" .. script
+  if vim.fn.filereadable(path) == 1 then
+    vim.cmd("source " .. path)
+  end
+end
