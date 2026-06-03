@@ -1,23 +1,22 @@
--- Prevent re-sourcing when a local init.lua exists in CWD
-if vim.g.did_nvim_init then
-  return
-end
-vim.g.did_nvim_init = true
-
--- Leader 键必须在加载 lazy.nvim 之前设置！
+-- Leader keys must be set before lazy.nvim
 vim.g.mapleader = ","
 vim.g.maplocalleader = ";"
 
--- 1. 加载你的基础配置和快捷键 (包含上面转写过来的 init.vim)
+-- Prevent re-sourcing — lazy.nvim's own flag is the single source of truth.
+if vim.g.lazy_did_setup then
+  return
+end
+
+-- Load base config
 require("usr.options")
 
--- 检查 Neovim 版本
+-- Check Neovim version (inline — was a lazy plugin with recursive dir spec)
 require("usr.version")
 
--- 2. 启动 lazy.nvim (所有插件的加载由它接管)
+-- Load lazy.nvim
 require("usr.lazy")
 
--- 3. 其他少量的全局配置
+-- VimLeave workaround
 vim.api.nvim_create_autocmd({ "VimLeave" }, {
   callback = function()
     vim.cmd("sleep 10m")
