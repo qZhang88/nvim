@@ -82,19 +82,10 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- Terminal: Esc to normal mode
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
--- System clipboard
+-- System clipboard (native OSC52 in options.lua handles +/* registers)
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y')
 vim.keymap.set({ "n", "v" }, "<leader>p", '"+p')
 vim.keymap.set({ "n", "v" }, "<leader>d", '"+d')
-
--- OSCYank: remote clipboard sync
-vim.api.nvim_create_autocmd("TextYankPost", {
-  callback = function()
-    if vim.v.event.operator:match("^[yd]$") and vim.v.event.regname == "+" then
-      vim.cmd("OSCYankRegister +")
-    end
-  end,
-})
 
 -- Keyboard shortcuts
 vim.keymap.set("n", "<leader>q", "q", { desc = "Macro recording" })
