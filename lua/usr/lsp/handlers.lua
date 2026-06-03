@@ -38,13 +38,14 @@ M.setup = function()
 
   vim.diagnostic.config(config)
 
-  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = "rounded",
-  })
+  local function with_border(handler)
+    return function(err, result, ctx, config)
+      vim.lsp.handlers[handler](err, result, ctx, vim.tbl_deep_extend("keep", config or {}, { border = "rounded" }))
+    end
+  end
 
-  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-    border = "rounded",
-  })
+  vim.lsp.handlers["textDocument/hover"] = with_border("hover")
+  vim.lsp.handlers["textDocument/signatureHelp"] = with_border("signature_help")
 end
 
 local navic = require("nvim-navic")
