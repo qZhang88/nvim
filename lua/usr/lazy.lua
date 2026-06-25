@@ -18,6 +18,7 @@ require("lazy").setup({
   {
     "folke/which-key.nvim",       -- 用于配置和提示快捷键
     event = "VeryLazy",
+    version = "*",                -- pin to v3 (wk.add API)
     config = function() require("usr.which-key") end,
   },
   "kkharji/sqlite.lua",           -- 数据库
