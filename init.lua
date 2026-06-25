@@ -10,6 +10,9 @@ if vim.g.lazy_did_setup then
   return
 end
 
+-- Silence deprecation warnings from plugins still using deprecated Neovim APIs
+vim.deprecate = function() end
+
 -- Check Neovim version
 require("usr.version")
 
